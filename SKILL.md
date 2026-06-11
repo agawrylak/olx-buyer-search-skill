@@ -15,7 +15,24 @@ If no listing satisfies the hard intent, say that no useful matches were found. 
 
 ## Workflow
 
-1. Parse the buyer intent into hard requirements and preferences.
+1. Clarify the buyer intent when needed.
+
+For broad or general requests, use model knowledge and quick product research to infer sensible buyer criteria before searching. Examples include beginner-friendliness, reliability, common defects, ease of setup, parts availability, compatibility, safety, support/community size, and typical value for money in the requested category.
+
+Ask the user 1-3 concise clarifying questions before searching only when missing information would materially change the search results or ranking. Do not ask questions just to be thorough if reasonable assumptions are enough.
+
+Clarify important missing details such as:
+
+- budget or price ceiling
+- location, delivery, pickup, or travel radius
+- intended use or skill level
+- required size, capacity, compatibility, language, standard, or other specification
+- risk tolerance for repairs, modifications, incomplete items, or older models
+- hard exclusions that are not obvious from the prompt
+
+If you proceed without asking, state the assumptions or buyer criteria used in the final answer.
+
+2. Parse the buyer intent into hard requirements and preferences.
 
 Hard requirements are constraints that make an offer useless if missing. Examples:
 
@@ -28,7 +45,9 @@ Hard requirements are constraints that make an offer useless if missing. Example
 
 Preferences improve ranking but do not decide basic usefulness.
 
-2. Generate 3-8 focused Polish OLX queries.
+Hard requirements and preferences can come from the user's prompt, user clarifications, model knowledge, and product research. Keep inferred assumptions separate from explicit user requirements; do not treat model assumptions as hard requirements unless they are necessary for the buyer's stated goal.
+
+3. Generate 3-8 focused Polish OLX queries.
 
 Use realistic OLX wording. Prefer concise query terms.
 
@@ -86,7 +105,7 @@ Examples:
 
 When a listing names a recognizable model but omits a required product fact, inspect it anyway and verify the fact externally. Reject it only if the named model/version fails the hard requirements or if the OLX listing has listing-specific problems such as missing components, wrong edition/generation, accessory-only listing, poor condition, damage, wrong language/region when relevant, or incompatible variant.
 
-3. Search OLX using browser-equivalent URLs.
+4. Search OLX using browser-equivalent URLs.
 
 Open or fetch these URLs using whatever browser, web-fetch, or search capability is available in the host system.
 
@@ -109,7 +128,7 @@ Use default OLX relevance ordering. Do not add `search[order]=created_at:desc` u
 
 Do not add `used` or `new` filters unless the user explicitly asks for item condition.
 
-4. Search deeply and track coverage.
+5. Search deeply and track coverage.
 
 Do not stop at the first result page unless the query has very few results or the first page clearly proves the query is irrelevant.
 
@@ -136,13 +155,15 @@ Track coverage for the final answer:
 - listings opened
 - useful listings accepted
 
-5. Inspect promising listings.
+6. Inspect promising listings.
 
 Open listings that appear to satisfy hard requirements or have strong title/location/category evidence.
 
 Use listing title, location, price, description, attributes, and evidence snippets.
 
 For standardized or researchable items, supplement the listing with general product knowledge and web research when it improves matching. This includes, but is not limited to, games, electronics, tools, appliances, vehicles, parts, books, media, instruments, sports gear, furniture, baby products, collectibles, and branded products.
+
+For general buyer questions, use model knowledge and research before and during listing inspection to define practical evaluation criteria, not only to verify individual listing facts.
 
 Keep these fact types separate:
 
@@ -167,7 +188,7 @@ Do not let external research override OLX-specific defects or constraints. A pro
 
 When using external research, cite evidence as either `OLX evidence` or `external evidence` in the result. If a hard requirement is satisfied only by external product facts, mark the match as partial or weak unless the listing's model/version is clear enough to make the inference reliable.
 
-6. Reject aggressively.
+7. Reject aggressively.
 
 Reject a listing if:
 
@@ -185,7 +206,7 @@ Reject a listing if:
 
 Wrong listing type is always a hard reject.
 
-7. Rank only accepted listings.
+8. Rank only accepted listings.
 
 Strong match:
 
@@ -223,6 +244,10 @@ Start with a short decision summary:
 - If none are useful, say why.
 
 Then return these sections.
+
+## Assumptions And Criteria
+
+If the user did not provide detailed criteria, briefly state the assumptions and product-selection criteria used. Make clear which criteria came from the user and which were inferred from model knowledge or research.
 
 ## Search Coverage
 
