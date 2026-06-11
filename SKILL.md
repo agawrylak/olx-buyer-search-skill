@@ -19,14 +19,12 @@ If no listing satisfies the hard intent, say that no useful matches were found. 
 
 Hard requirements are constraints that make an offer useless if missing. Examples:
 
-- required location or named place
-- requested listing type
-- required capacity
-- required amenity
+- required listing or transaction type, such as sale, rental, service, accommodation, product, or bundle
+- required condition, such as new, used, working, complete, not damaged, or not for parts
+- required model, version, generation, size, compatibility, capacity, power, language, standard, or other capability
 - required price bound
-- required date or availability
+- required location, delivery, pickup, date, availability, or seller constraint
 - explicit reject criteria
-- must allow event, party, pets, delivery, pickup, etc. when stated as required
 
 Preferences improve ranking but do not decide basic usefulness.
 
@@ -34,7 +32,9 @@ Preferences improve ranking but do not decide basic usefulness.
 
 Use realistic OLX wording. Prefer concise query terms.
 
-For physical products, include both narrow requirement-heavy queries and broader product/category queries. Some sellers omit capability words such as player count, runtime, capacity, compatibility, or "family", even when the product satisfies them. Use broader searches to discover named models, then verify hard requirements from listing details and external product facts.
+For standardized physical products, include both narrow requirement-heavy queries and broader product/category queries. Some sellers omit capability words such as size, capacity, compatibility, runtime, supported standard, language, generation, or condition, even when the product satisfies them. Use broader searches to discover named models, then verify hard requirements from listing details and external product facts.
+
+For location-bound searches, services, rentals, or accommodation, include the place and listing type in most queries. Then add required features, dates, capacity, or constraints as separate query variants.
 
 Prefer category-scoped OLX URLs when the requested listing type has a clear OLX category. This avoids keyword-only false positives from unrelated categories. Examples:
 
@@ -45,30 +45,29 @@ Prefer category-scoped OLX URLs when the requested listing type has a clear OLX 
 
 Use the all-offers URL only when the category is unclear or when category-scoped results are too sparse.
 
-Product query examples:
+Product query patterns:
 
-- `drukarka 3d bambu lab a1`
-- `fotelik 15-36 isofix`
-- `laptop thinkpad 32gb ram`
-- `pralka slim 45 cm`
-- `gra planszowa rodzinna`
+- `{product type} {required feature}`
+- `{product type} {brand or model}`
+- `{product type} {condition}`
+- `{product type} {compatible device or standard}`
+- `{category synonym} {budget or location}`
 
-Accommodation query examples:
+Location-bound query patterns:
 
-- `{place} nocleg sauna jacuzzi`
-- `{place} domek sauna jacuzzi`
-- `{place} domki sauna bania`
-- `{place} willa sauna jacuzzi`
-- `{place} wieczor kawalerski sauna`
-- `{place} 10 osob sauna`
+- `{place} {listing type} {required feature}`
+- `{place} {service type} {required capability}`
+- `{place} {rental type} {date or capacity}`
+- `{place} {product type} {pickup or delivery wording}`
+- `{nearby place or district} {listing type} {required feature}`
 
 Avoid generic amenity-only or feature-only queries if the listing type matters, such as:
 
-- `sauna bania`
-- `jacuzzi sauna`
-- `mobilne spa`
-- `isofix`
-- `drukarka`
+- `{required feature}` by itself
+- `{amenity}` by itself
+- `{brand}` by itself when it commonly returns accessories or parts
+- `{capacity}` by itself
+- `{condition}` by itself
 
 For standardized products, do not rely only on requirement phrases. Sellers often omit facts such as capacity, size, compatibility, power, runtime, language, supported standards, age range, or player count, even when the model satisfies them. Requirement-heavy queries can also create false positives from unrelated categories where the same words mean something else. Use category-scoped searches and mix query types:
 
@@ -80,10 +79,10 @@ For standardized products, do not rely only on requirement phrases. Sellers ofte
 
 Examples:
 
-- board games: search both `gra planszowa 4 graczy` and broader/category terms like `gra planszowa rodzinna`, plus title queries such as `carcassonne` or `wsiąść do pociągu`
-- electronics: search both `laptop 32gb ram` and model/series queries, then verify RAM, CPU, screen, and generation from listing facts or specs
-- child seats: search both `fotelik 15-36 isofix` and model queries, then verify weight range, standard, and accident-free condition
-- appliances: search both `pralka slim 45 cm` and model queries, then verify depth, capacity, and condition
+- For a product with required capability, search both `{product type} {capability}` and `{brand/model}` queries, then verify the capability from listing facts or external specs.
+- For a compatibility-sensitive item, search both `{product type} {compatible device}` and `{model}` queries, then reject incompatible variants.
+- For a location-bound request, search `{place} {listing type}` plus variants for required features, capacity, dates, or seller constraints.
+- For a service request, search `{place} {service type}` plus variants for required equipment, availability, certification, or delivery area.
 
 When a listing names a recognizable model but omits a required product fact, inspect it anyway and verify the fact externally. Reject it only if the named model/version fails the hard requirements or if the OLX listing has listing-specific problems such as missing components, wrong edition/generation, accessory-only listing, poor condition, damage, wrong language/region when relevant, or incompatible variant.
 
@@ -101,10 +100,10 @@ Or, when a clear category exists:
 
 Examples:
 
-- `https://www.olx.pl/oferty/q-okuninka-dom-jacuzzi-sauna/`
-- `https://www.olx.pl/oferty/q-okuninka-nocleg-sauna-jacuzzi/`
-- `https://www.olx.pl/sport-hobby/gry-planszowe/q-carcassonne/`
-- `https://www.olx.pl/sport-hobby/gry-planszowe/q-gra-planszowa-4-graczy/`
+- `https://www.olx.pl/oferty/q-{place}-{listing-type}-{feature}/`
+- `https://www.olx.pl/{category-path}/q-{product-type}-{feature}/`
+- `https://www.olx.pl/{category-path}/q-{brand-or-model}/`
+- `https://www.olx.pl/{region}/q-{listing-type}-{required-feature}/`
 
 Use default OLX relevance ordering. Do not add `search[order]=created_at:desc` unless the user explicitly asks for newest.
 
@@ -188,6 +187,8 @@ Do not include rejects in recommendations.
 
 ## Output Format
 
+Answer in the same language as the buyer's prompt. If the prompt mixes languages, use the dominant language unless the user explicitly asks for another language.
+
 Start with a short decision summary:
 
 - Say whether there are useful matches.
@@ -205,7 +206,7 @@ For each useful listing:
 - price
 - location
 - match level
-- why it is useful
+- why it was chosen: 2-4 concise sentences explaining the key tradeoffs, listing-specific evidence, and why it ranks above alternatives
 - evidence
 - external research used, if any
 - what to ask the seller
@@ -233,9 +234,9 @@ Examples:
 
 Briefly mention common rejected patterns only if useful:
 
-- mobile sauna/spa services
-- sauna/jacuzzi products
-- wrong city
-- too-small capacity
-- no required amenity
-- sale listings instead of rental
+- wrong listing or transaction type
+- accessory, part, expansion, or service instead of the requested main item
+- damaged, incomplete, for-parts, or repair-needed listings
+- wrong model, version, generation, size, language, standard, or compatibility
+- over budget or missing required delivery/pickup/location/date
+- missing required capability, capacity, condition, amenity, or permission
