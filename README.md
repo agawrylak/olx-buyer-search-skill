@@ -1,6 +1,6 @@
 # OLX Buyer Search Skill
 
-OpenCode skill for searching OLX.pl listings from natural-language buyer intent.
+Portable agent skill for searching OLX.pl listings from natural-language buyer intent.
 
 The skill focuses on useful buyer recommendations rather than keyword matches. It separates hard requirements from preferences, searches OLX with realistic Polish queries, verifies recognizable products with external product facts, and rejects wrong listing types or unsuitable offers.
 
@@ -13,13 +13,15 @@ The skill focuses on useful buyer recommendations rather than keyword matches. I
 
 ## Installation
 
-Copy this directory into your OpenCode skills directory, for example:
+Copy `SKILL.md` into any agent or assistant system that supports reusable skill/instruction files.
+
+For systems that use directory-based skills, copy this directory into that system's skills directory, for example:
 
 ```text
-.opencode/skills/olx-buyer-search/
+skills/olx-buyer-search/
 ```
 
-Then use the skill when searching OLX.pl listings manually, without running any local app unless explicitly requested.
+Then use the skill when searching OLX.pl listings with the browser, web-fetch, or search capabilities available in your agent environment.
 
 ## Contents
 

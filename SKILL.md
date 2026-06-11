@@ -1,11 +1,11 @@
 ---
 name: olx-buyer-search
-description: Use when searching OLX.pl listings from natural-language buyer intent, comparing real offers, or rejecting mismatched OLX results without using the olx-agent app.
+description: Use when searching OLX.pl listings from natural-language buyer intent, comparing real offers, or rejecting mismatched OLX results.
 ---
 
 # OLX Buyer Search
 
-Use this skill for skill-only OLX.pl buyer searches. Do not call the local Go `olx-agent` app unless the user explicitly asks to compare against it.
+Use this skill for OLX.pl buyer searches. It is intended for agents with browser, web-fetch, or search capabilities and does not depend on any local application.
 
 ## Core Principle
 
@@ -45,7 +45,15 @@ Prefer category-scoped OLX URLs when the requested listing type has a clear OLX 
 
 Use the all-offers URL only when the category is unclear or when category-scoped results are too sparse.
 
-For lodging examples:
+Product query examples:
+
+- `drukarka 3d bambu lab a1`
+- `fotelik 15-36 isofix`
+- `laptop thinkpad 32gb ram`
+- `pralka slim 45 cm`
+- `gra planszowa rodzinna`
+
+Accommodation query examples:
 
 - `{place} nocleg sauna jacuzzi`
 - `{place} domek sauna jacuzzi`
@@ -54,11 +62,13 @@ For lodging examples:
 - `{place} wieczor kawalerski sauna`
 - `{place} 10 osob sauna`
 
-Avoid generic amenity-only queries if the listing type matters, such as:
+Avoid generic amenity-only or feature-only queries if the listing type matters, such as:
 
 - `sauna bania`
 - `jacuzzi sauna`
 - `mobilne spa`
+- `isofix`
+- `drukarka`
 
 For standardized products, do not rely only on requirement phrases. Sellers often omit facts such as capacity, size, compatibility, power, runtime, language, supported standards, age range, or player count, even when the model satisfies them. Requirement-heavy queries can also create false positives from unrelated categories where the same words mean something else. Use category-scoped searches and mix query types:
 
@@ -78,6 +88,8 @@ Examples:
 When a listing names a recognizable model but omits a required product fact, inspect it anyway and verify the fact externally. Reject it only if the named model/version fails the hard requirements or if the OLX listing has listing-specific problems such as missing components, wrong edition/generation, accessory-only listing, poor condition, damage, wrong language/region when relevant, or incompatible variant.
 
 3. Search OLX using browser-equivalent URLs.
+
+Open or fetch these URLs using whatever browser, web-fetch, or search capability is available in the host system.
 
 Use:
 
@@ -138,8 +150,8 @@ Reject a listing if:
 - required amenity is missing
 - required capacity is missing or too small
 - explicit reject criterion appears
-- it is a product/service when user wants accommodation
-- it is accommodation when user wants a physical product
+- it is the wrong transaction type, such as service/rental/sale when the buyer asked for another type
+- it is the wrong item class, such as accommodation when the buyer wants a product, or an accessory when the buyer wants the main item
 - it only has keyword overlap but no evidence for the hard intent
 - it is a sale listing when the user wants rental/accommodation, unless user allowed both
 - external research shows the named model/version does not satisfy a hard requirement
@@ -209,13 +221,13 @@ Give concrete seller questions.
 
 Examples:
 
-- Is the sauna included in the rental price?
-- Is the jacuzzi/ruska bania available on the requested date?
-- Is a bachelor party allowed?
-- Is the house exclusive for our group?
-- How many people can sleep comfortably?
-- How far is it from the lake?
-- Are quiet hours or deposits required?
+- Is the item fully functional and ready to use?
+- Is it complete, with all required accessories, cables, manuals, keys, or mounting parts?
+- Has it ever been repaired, damaged, modified, or serviced?
+- Can you provide a photo of the serial number, model label, or exact version?
+- Is there proof of purchase, warranty, or transfer documentation?
+- Can I test it at pickup, or can you send a short video showing it working?
+- For accommodation: is the required amenity included, available on the requested date, and included in the price?
 
 ## Rejected Patterns
 
@@ -227,12 +239,3 @@ Briefly mention common rejected patterns only if useful:
 - too-small capacity
 - no required amenity
 - sale listings instead of rental
-
-## Comparison Mode
-
-When the user asks to compare skill-only search with the app:
-
-- Run the skill-only workflow first.
-- Separately run the app only if explicitly requested.
-- Compare useful listings found, false positives, missed good listings, summary quality, speed, and repeatability.
-- Do not mix app results into the skill-only result set.
