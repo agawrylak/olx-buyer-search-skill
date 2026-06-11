@@ -109,7 +109,34 @@ Use default OLX relevance ordering. Do not add `search[order]=created_at:desc` u
 
 Do not add `used` or `new` filters unless the user explicitly asks for item condition.
 
-4. Inspect promising listings.
+4. Search deeply and track coverage.
+
+Do not stop at the first result page unless the query has very few results or the first page clearly proves the query is irrelevant.
+
+Always perform deep coverage by default: scan roughly 100-300 result cards across query variants when feasible. Inspect multiple result pages per promising query, rather than treating page 1 as representative.
+
+Prefer breadth first, then depth:
+
+- scan result cards across multiple queries and pages
+- deduplicate repeated listings before opening them
+- shortlist promising listings by title, category, price, location, condition, and snippet evidence
+- open the strongest shortlisted listings for detailed verification
+
+Open at least 20-40 promising listings when available. If tool, time, access, or result-quality limits prevent this, say so in the final answer.
+
+Deduplicate by listing URL, listing ID, title plus location plus price, or clearly identical photos/snippets. Do not count promoted duplicate cards twice.
+
+If early searches are sparse or noisy, expand queries using category synonyms, model aliases, common misspellings, broader category terms, and specific models or brands discovered in early result pages.
+
+Track coverage for the final answer:
+
+- queries used
+- pages checked
+- approximate result cards scanned
+- listings opened
+- useful listings accepted
+
+5. Inspect promising listings.
 
 Open listings that appear to satisfy hard requirements or have strong title/location/category evidence.
 
@@ -140,7 +167,7 @@ Do not let external research override OLX-specific defects or constraints. A pro
 
 When using external research, cite evidence as either `OLX evidence` or `external evidence` in the result. If a hard requirement is satisfied only by external product facts, mark the match as partial or weak unless the listing's model/version is clear enough to make the inference reliable.
 
-5. Reject aggressively.
+6. Reject aggressively.
 
 Reject a listing if:
 
@@ -158,7 +185,7 @@ Reject a listing if:
 
 Wrong listing type is always a hard reject.
 
-6. Rank only accepted listings.
+7. Rank only accepted listings.
 
 Strong match:
 
@@ -196,6 +223,17 @@ Start with a short decision summary:
 - If none are useful, say why.
 
 Then return these sections.
+
+## Search Coverage
+
+Briefly state:
+
+- queries used
+- pages checked
+- approximate result cards scanned
+- listings opened
+- useful listings accepted
+- any coverage limits, such as blocked pages, sparse results, duplicates, or time/tool limits
 
 ## Best Matches
 
